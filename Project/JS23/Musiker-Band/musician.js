@@ -50,6 +50,19 @@ class Musician {
   getPreviousBands() {
     return this.previousBands.map((mb) => mb.band);
   }
+  toJSON() {
+    const { name, infoText, birthYear, bands } = this;
+    return {
+      name,
+      infoText,
+      birthYear,
+      bands: bands.map((bandMembership) => ({
+        band: bandMembership.band.name,
+        joinYear: bandMembership.joinYear,
+        instruments: bandMembership.instruments,
+      })),
+    };
+  }
 }
 
 module.exports = Musician;

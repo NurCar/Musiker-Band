@@ -54,8 +54,8 @@ class Program {
 
   toJSON() {
     return {
-      bands: this.bands,
-      musicians: this.musicians,
+      bands: this.bands.map((band) => band.toJSON()),
+      musicians: this.musicians.map((musician) => musician.toJSON()),
     };
   }
 }

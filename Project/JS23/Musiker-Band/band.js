@@ -39,6 +39,25 @@ class Band {
   getPreviousMembers() {
     return this.previousMembers.map((bm) => bm.member);
   }
+  toJSON() {
+    const { name, infoText, formationYear, disbandYear, currentMembers, previousMembers } = this;
+    return {
+      name,
+      infoText,
+      formationYear,
+      disbandYear,
+      currentMembers: currentMembers.map((member) => ({
+        member: member.member.name,
+        joinYear: member.joinYear,
+        instruments: member.instruments,
+      })),
+      previousMembers: previousMembers.map((member) => ({
+        member: member.member.name,
+        leaveYear: member.leaveYear,
+        instruments: member.instruments,
+      })),
+    };
+  }
 }
 
 module.exports = Band;

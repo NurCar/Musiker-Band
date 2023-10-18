@@ -15,6 +15,22 @@
       "disbandYear": "2023",
       "currentMembers": [],
       "previousMembers": []
+    },
+    {
+      "name": "doganay",
+      "infoText": "1111",
+      "formationYear": "1111",
+      "disbandYear": "2222",
+      "currentMembers": [
+        {
+          "member": "nurhan",
+          "joinYear": "4444",
+          "instruments": [
+            "gitar"
+          ]
+        }
+      ],
+      "previousMembers": []
     }
   ],
   "musicians": [
@@ -22,9 +38,18 @@
       "name": "yok be",
       "infoText": "yolugumu ozler",
       "birthYear": "2008",
-      "bands": [],
-      "previousBands": [],
-      "instruments": []
+      "bands": []
+    },
+    {
+      "name": "nurhan",
+      "infoText": "ks",
+      "birthYear": "1111",
+      "bands": [
+        {
+          "band": "doganay",
+          "joinYear": "4444"
+        }
+      ]
     }
   ]
 }
