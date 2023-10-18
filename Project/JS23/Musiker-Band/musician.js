@@ -3,26 +3,53 @@ class Musician {
     this.name = name;
     this.infoText = infoText;
     this.birthYear = birthYear;
-    this.bands = []; // Şu anki gruplar
-    this.previousBands = []; // Önceki gruplar
-    this.instruments = []; // Çaldığı enstrümanlar
+    this.bands = [];
+    this.previousBands = [];
+    this.instruments = [];
   }
 
   addBand(band, joinYear) {
-    // Şu anki grupları eklemek için bir metot
+    const musicianBand = { band, joinYear };
+    this.bands.push(musicianBand);
   }
 
   removeBand(band) {
-    // Şu anki grupları çıkarmak için bir metot
+    const index = this.bands.findIndex((mb) => mb.band === band);
+    if (index !== -1) {
+      this.bands.splice(index, 1);
+    }
   }
 
   addPreviousBand(band, leaveYear) {
-    // Önceki grupları eklemek için bir metot
+    const musicianBand = { band, leaveYear };
+    this.previousBands.push(musicianBand);
   }
 
   removePreviousBand(band) {
-    // Önceki grupları çıkarmak için bir metot
+    const index = this.previousBands.findIndex((mb) => mb.band === band);
+    if (index !== -1) {
+      this.previousBands.splice(index, 1);
+    }
   }
 
-  // Daha fazla metotlar ve özellikler eklenebilir
+  addInstrument(instrument) {
+    this.instruments.push(instrument);
+  }
+
+  removeInstrument(instrument) {
+    const index = this.instruments.indexOf(instrument);
+    if (index !== -1) {
+      this.instruments.splice(index, 1);
+    }
+  }
+
+  getBands() {
+    return this.bands.map((mb) => mb.band);
+  }
+
+  getPreviousBands() {
+    return this.previousBands.map((mb) => mb.band);
+  }
 }
+
+module.exports = Musician;

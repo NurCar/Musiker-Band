@@ -1,28 +1,44 @@
-const fs = require("fs");
 class Band {
-  constructor(name, infoText, formationYear, disbandYear) {
+  constructor(name, infoText, formationYear, disbandYear = null) {
     this.name = name;
     this.infoText = infoText;
     this.formationYear = formationYear;
     this.disbandYear = disbandYear;
-    this.members = [];
+    this.currentMembers = [];
     this.previousMembers = [];
   }
+
   addMember(member, joinYear, instruments) {
-    // Şu anki üyeleri eklemek için bir metot
+    const bandMember = { member, joinYear, instruments };
+    this.currentMembers.push(bandMember);
   }
 
   removeMember(member) {
-    // Şu anki üyeleri çıkarmak için bir metot
+    const index = this.currentMembers.findIndex((bm) => bm.member === member);
+    if (index !== -1) {
+      this.currentMembers.splice(index, 1);
+    }
   }
 
   addPreviousMember(member, leaveYear, instruments) {
-    // Önceki üyeleri eklemek için bir metot
+    const bandMember = { member, leaveYear, instruments };
+    this.previousMembers.push(bandMember);
   }
 
   removePreviousMember(member) {
-    // Önceki üyeleri çıkarmak için bir metot
+    const index = this.previousMembers.findIndex((bm) => bm.member === member);
+    if (index !== -1) {
+      this.previousMembers.splice(index, 1);
+    }
   }
 
-  // Daha fazla metotlar ve özellikler eklenebilir
+  getMembers() {
+    return this.currentMembers.map((bm) => bm.member);
+  }
+
+  getPreviousMembers() {
+    return this.previousMembers.map((bm) => bm.member);
+  }
 }
+
+module.exports = Band;

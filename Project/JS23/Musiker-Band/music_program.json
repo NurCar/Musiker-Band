@@ -1,0 +1,30 @@
+{
+  "bands": [
+    {
+      "name": "Aski",
+      "infoText": "Cogu bitti azi kaldi",
+      "formationYear": "1986",
+      "disbandYear": "",
+      "currentMembers": [],
+      "previousMembers": []
+    },
+    {
+      "name": "Sevgi",
+      "infoText": "ayini icti",
+      "formationYear": "1987",
+      "disbandYear": "2023",
+      "currentMembers": [],
+      "previousMembers": []
+    }
+  ],
+  "musicians": [
+    {
+      "name": "yok be",
+      "infoText": "yolugumu ozler",
+      "birthYear": "2008",
+      "bands": [],
+      "previousBands": [],
+      "instruments": []
+    }
+  ]
+}
