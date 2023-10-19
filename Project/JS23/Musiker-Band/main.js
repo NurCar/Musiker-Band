@@ -8,7 +8,7 @@ const rl = require('readline').createInterface({
   output: process.stdout
 });
 
-const program = new Program();
+const program = new Program(rl);
 program.loadDataFromJson();
 
 const menu = () => {

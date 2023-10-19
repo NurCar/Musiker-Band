@@ -1,33 +1,49 @@
 {
   "musicians": [
     {
-      "name": "as",
-      "infoText": "uk",
-      "birthYear": 1999,
+      "name": "nur",
+      "infoText": "uey",
+      "birthYear": 1990,
       "bands": [],
-      "instruments": [
-        "uj",
-        "ik"
-      ]
+      "instruments": []
     },
     {
-      "name": "se",
-      "infoText": "ik",
-      "birthYear": 9999,
+      "name": "es",
+      "infoText": "aoik",
+      "birthYear": 2000,
       "bands": [],
-      "instruments": [
-        "se"
-      ]
+      "instruments": []
     }
   ],
   "bands": [
     {
-      "name": "nur",
-      "infoText": "asd",
-      "formationYear": 1777,
+      "name": "sel",
+      "infoText": "ikol",
+      "formationYear": 1980,
       "disbandYear": null,
       "currentMembers": [],
-      "previousMembers": []
+      "previousMembers": [
+        {
+          "member": {
+            "name": "es",
+            "infoText": "aoik",
+            "birthYear": 2000,
+            "bands": [],
+            "instruments": []
+          },
+          "leaveYear": 2015
+        },
+        {
+          "member": {
+            "name": "nur",
+            "infoText": "uey",
+            "birthYear": 1990,
+            "bands": [],
+            "instruments": []
+          },
+          "leaveYear": 5
+        }
+      ]
     }
   ]
 }

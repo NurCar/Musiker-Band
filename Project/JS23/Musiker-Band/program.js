@@ -1,15 +1,15 @@
 const fs = require('fs');
 const Musician = require('./musician');
 const Band = require('./band');
-
+const readline = require('readline');
 
 class Program {
-  constructor() {
+  constructor(rl) {
     this.musicians = [];
     this.bands = [];
+    this.rl = rl;
     this.loadDataFromJson();
   }
-
 
   createMusician(name, infoText, birthYear, instruments) {
     const musician = new Musician(name, infoText, birthYear);
@@ -55,19 +55,19 @@ class Program {
     }
   }
 
-  addMusicianToBand(musicianName, bandName, isCurrentMember, leaveYear) {
+  addMusicianToBand(musicianName, bandName, isCurrentMember, instruments) {
     try {
       const musician = this.musicians.find((m) => m.name.toLowerCase() === musicianName.toLowerCase());
       const band = this.bands.find((b) => b.name.toLowerCase() === bandName.toLowerCase());
 
       if (musician && band) {
         if (isCurrentMember === 'yes') {
-          band.addMember(musician, new Date().getFullYear());
-          musician.joinBand(bandName, new Date().getFullYear());
+          band.addMember(musician, new Date().getFullYear(), instruments);
+          musician.joinBand(bandName, new Date().getFullYear(), instruments);
           this.saveDataToJson();
           console.log('Musician added to the band successfully.');
         } else if (isCurrentMember === 'no') {
-          rl.question('Enter the year they left: ', (leaveYear) => {
+          this.rl.question('Enter the year they left: ', (leaveYear) => {
             band.removeMember(musician, parseInt(leaveYear, 10));
             musician.leaveBand(bandName, parseInt(leaveYear, 10));
             this.saveDataToJson();
@@ -87,6 +87,7 @@ class Program {
       console.error('An error occurred:', error);
     }
   }
+
 
   removeMusicianFromBand(musicianName, bandName, leaveYear) {
     const musician = this.musicians.find((m) => musicianName.toLowerCase() === m.name.toLowerCase());
@@ -209,7 +210,6 @@ class Program {
       console.log('Data file not found or cannot be read.');
     }
   }
-
 
 }
 
