@@ -1,3 +1,6 @@
+const fs = require('fs');
+const Band = require('./band');
+
 class Musician {
   constructor(name, infoText, birthYear) {
     this.name = name;
@@ -8,59 +11,38 @@ class Musician {
     this.instruments = [];
   }
 
-  addBand(band, joinYear) {
-    const musicianBand = { band, joinYear };
-    this.bands.push(musicianBand);
-  }
-
-  removeBand(band) {
-    const index = this.bands.findIndex((mb) => mb.band === band);
-    if (index !== -1) {
-      this.bands.splice(index, 1);
+  joinBand(bandName, joinYear, instruments) {
+    const band = this.bands.find((b) => b.name === bandName);
+    if (band) {
+      const joinYearInt = parseInt(joinYear, 10);
+      this.bands.push({ band, joinYear: joinYearInt, instruments: instruments });
+      band.addMember(this, joinYearInt, instruments);
+    } else {
+      console.log('Band not found.');
     }
   }
 
-  addPreviousBand(band, leaveYear) {
-    const musicianBand = { band, leaveYear };
-    this.previousBands.push(musicianBand);
-  }
-
-  removePreviousBand(band) {
-    const index = this.previousBands.findIndex((mb) => mb.band === band);
-    if (index !== -1) {
-      this.previousBands.splice(index, 1);
+  leaveBand(bandName, leaveYear) {
+    const band = this.bands.find((b) => b.name === bandName);
+    if (band) {
+      const leaveYearInt = parseInt(leaveYear, 10);
+      this.previousBands.push({ band, leaveYear: leaveYearInt });
+      band.removeMember(this, leaveYearInt);
+    } else {
+      console.log('Band not found.');
     }
   }
 
-  addInstrument(instrument) {
-    this.instruments.push(instrument);
-  }
-
-  removeInstrument(instrument) {
-    const index = this.instruments.indexOf(instrument);
-    if (index !== -1) {
-      this.instruments.splice(index, 1);
-    }
-  }
-
-  getBands() {
-    return this.bands.map((mb) => mb.band);
-  }
-
-  getPreviousBands() {
-    return this.previousBands.map((mb) => mb.band);
-  }
   toJSON() {
-    const { name, infoText, birthYear, bands } = this;
     return {
-      name,
-      infoText,
-      birthYear,
-      bands: bands.map((bandMembership) => ({
-        band: bandMembership.band.name,
-        joinYear: bandMembership.joinYear,
-        instruments: bandMembership.instruments,
+      name: this.name,
+      infoText: this.infoText,
+      birthYear: this.birthYear,
+      bands: this.bands.map((b) => ({
+        name: b.name,
+        instruments: b.instruments,
       })),
+      instruments: this.instruments,
     };
   }
 }

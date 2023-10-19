@@ -1,0 +1,33 @@
+{
+  "musicians": [
+    {
+      "name": "as",
+      "infoText": "uk",
+      "birthYear": 1999,
+      "bands": [],
+      "instruments": [
+        "uj",
+        "ik"
+      ]
+    },
+    {
+      "name": "se",
+      "infoText": "ik",
+      "birthYear": 9999,
+      "bands": [],
+      "instruments": [
+        "se"
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "name": "nur",
+      "infoText": "asd",
+      "formationYear": 1777,
+      "disbandYear": null,
+      "currentMembers": [],
+      "previousMembers": []
+    }
+  ]
+}
