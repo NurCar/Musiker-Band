@@ -6,9 +6,10 @@ class Musician {
     this.name = name;
     this.infoText = infoText;
     this.birthYear = birthYear;
+    this.instruments = [];
     this.bands = [];
     this.previousBands = [];
-    this.instruments = [];
+
   }
 
   joinBand(bandName, joinYear, instruments) {
@@ -38,25 +39,11 @@ class Musician {
       name: this.name,
       infoText: this.infoText,
       birthYear: this.birthYear,
-      bands: this.bands.map((b) => ({
-        name: b.name,
-        joinYear: b.joinYear,
-        instruments: b.instruments,
-      })),
       instruments: this.instruments,
-    };
-  }
-
-  toJSONWithoutJoinYear() {
-    return {
-      name: this.name,
-      infoText: this.infoText,
-      birthYear: this.birthYear,
       bands: this.bands.map((b) => ({
         name: b.name,
         instruments: b.instruments,
       })),
-      instruments: this.instruments,
     };
   }
 }

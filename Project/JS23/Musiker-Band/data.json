@@ -2,48 +2,20 @@
   "musicians": [
     {
       "name": "nur",
-      "infoText": "uey",
-      "birthYear": 1990,
-      "bands": [],
-      "instruments": []
-    },
-    {
-      "name": "es",
-      "infoText": "aoik",
-      "birthYear": 2000,
-      "bands": [],
-      "instruments": []
+      "infoText": "khf",
+      "birthYear": 1999,
+      "instruments": [],
+      "bands": []
     }
   ],
   "bands": [
     {
-      "name": "sel",
-      "infoText": "ikol",
-      "formationYear": 1980,
+      "name": "as",
+      "infoText": "khd",
+      "formationYear": 1999,
       "disbandYear": null,
       "currentMembers": [],
-      "previousMembers": [
-        {
-          "member": {
-            "name": "es",
-            "infoText": "aoik",
-            "birthYear": 2000,
-            "bands": [],
-            "instruments": []
-          },
-          "leaveYear": 2015
-        },
-        {
-          "member": {
-            "name": "nur",
-            "infoText": "uey",
-            "birthYear": 1990,
-            "bands": [],
-            "instruments": []
-          },
-          "leaveYear": 5
-        }
-      ]
+      "previousMembers": []
     }
   ]
 }

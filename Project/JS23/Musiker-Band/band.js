@@ -22,19 +22,22 @@ class Band {
     member.leaveBand(this.name, leaveYear);
   }
 
+
   toJSON() {
     return {
       name: this.name,
       infoText: this.infoText,
       formationYear: this.formationYear,
       disbandYear: this.disbandYear,
-      currentMembers: this.currentMembers.map((memberInfo) => ({
-        member: memberInfo.member.toJSONWithoutJoinYear(),
-        instruments: memberInfo.instruments,
-      })),
+      currentMembers: this.currentMembers.map((memberInfo) => {
+        const memberJSON = (typeof memberInfo.member.toJSON === 'function') ? memberInfo.member.toJSON() : memberInfo.member;
+        return {
+          member: memberJSON,
+          instruments: memberInfo.instruments,
+        };
+      }),
       previousMembers: this.previousMembers,
     };
   }
 }
-
 module.exports = Band;

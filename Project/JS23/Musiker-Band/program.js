@@ -3,23 +3,103 @@ const Musician = require('./musician');
 const Band = require('./band');
 const readline = require('readline');
 
+
 class Program {
   constructor(rl) {
+    this.data = {
+      musicians: [],
+      bands: [],
+    };
     this.musicians = [];
     this.bands = [];
     this.rl = rl;
     this.loadDataFromJson();
   }
 
-  createMusician(name, infoText, birthYear, instruments) {
-    const musician = new Musician(name, infoText, birthYear);
-    musician.instruments = instruments;
-    this.musicians.push(musician);
-    this.saveDataToJson();
-    console.log('Musician created successfully.');
+  menu() {
+    console.log('** Music Program **');
+    console.log('1. Create a New Musician');
+    console.log('2. Delete a Musician');
+    console.log('3. Create a New Band');
+    console.log('4. Delete a Band');
+    console.log('5. Add a Musician to a Band');
+    console.log('6. Remove a Musician from a Band');
+    console.log('7. View Data');
+    console.log('8. Exit');
+  };
+
+  createMusician() {
+    const askName = () => {
+      this.rl.question("Musician's Name: ", (name) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
+          console.log('Invalid name. Name should only contain letters, numbers, and spaces.');
+          askName();
+        } else {
+          const askInfo = () => {
+            this.rl.question('Info: ', (infoText) => {
+              if (!/.+/.test(infoText)) {
+                console.log('Invalid info text. Info should not be empty.');
+                askInfo();
+              } else {
+                const askBirthYear = () => {
+                  this.rl.question('Birth Year: ', (birthYear) => {
+                    if (!/^\d{4}$/.test(birthYear)) {
+                      console.log('Invalid birth year format. Please enter a 4-digit year.');
+                      askBirthYear();
+                    } else {
+                      const currentYear = new Date().getFullYear();
+                      if (birthYear < 1900 || birthYear > currentYear) {
+                        console.log('Invalid birth year. Please enter a valid birth year between 1900 and the current year.');
+                        askBirthYear();
+                      } else {
+                        const askInstruments = () => {
+                          this.rl.question('Enter the Instruments Played (separated by commas): ', (instruments) => {
+                            const instrumentList = instruments.split(',').map((i) => i.trim());
+                            if (instrumentList.some((instrument) => !/^[a-zA-Z\s,]+$/.test(instrument))) {
+                              console.log('Invalid instrument name. Instruments should only contain letters, spaces, and commas.');
+                              askInstruments();
+                            } else {
+                              const musician = new Musician(name, infoText, parseInt(birthYear, 10), instrumentList);
+                              this.musicians.push(musician);
+                              this.saveDataToJson();
+                              console.log('Musician created successfully.');
+                              this.menu();
+                            }
+                          });
+                        };
+                        askInstruments();
+                      }
+                    }
+                  });
+                };
+                askBirthYear();
+              }
+            });
+          };
+          askInfo();
+        }
+      });
+    };
+
+    askName();
   }
 
-  deleteMusician(name) {
+  deleteMusician() {
+    const askForName = () => {
+      this.rl.question("Enter the Name of the Musician to Delete: ", (name) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
+          console.log("Invalid name. Name should only contain letters, numbers, and spaces.");
+          askForName();
+        } else {
+          this.performDelete(name);
+        }
+      });
+    };
+
+    askForName();
+  }
+
+  performDelete(name) {
     const musician = this.musicians.find((m) => m.name === name);
     if (musician) {
       this.musicians = this.musicians.filter((m) => m.name !== name);
@@ -28,87 +108,224 @@ class Program {
         band.previousMembers = band.previousMembers.filter((member) => member.member.name !== name);
       });
       this.saveDataToJson();
-      console.log('Musician deleted successfully.');
+      console.log("Musician deleted successfully.");
     } else {
-      console.log('Musician not found.');
+      console.log("Musician not found.");
+      this.menu();
     }
   }
 
-  createBand(name, infoText, formationYear, disbandYear) {
-    const band = new Band(name, infoText, formationYear, disbandYear);
-    this.bands.push(band);
-    this.saveDataToJson();
-    console.log('Band created successfully.');
-  }
-
-  deleteBand(name) {
-    const band = this.bands.find((b) => b.name === name);
-    if (band) {
-      this.bands = this.bands.filter((b) => b.name !== name);
-      this.musicians.forEach((musician) => {
-        musician.bands = musician.bands.filter((b) => b.name !== name);
-      });
-      this.saveDataToJson();
-      console.log('Band deleted successfully.');
-    } else {
-      console.log('Band not found.');
-    }
-  }
-
-  addMusicianToBand(musicianName, bandName, isCurrentMember, instruments) {
-    try {
-      const musician = this.musicians.find((m) => m.name.toLowerCase() === musicianName.toLowerCase());
-      const band = this.bands.find((b) => b.name.toLowerCase() === bandName.toLowerCase());
-
-      if (musician && band) {
-        if (isCurrentMember === 'yes') {
-          band.addMember(musician, new Date().getFullYear(), instruments);
-          musician.joinBand(bandName, new Date().getFullYear(), instruments);
-          this.saveDataToJson();
-          console.log('Musician added to the band successfully.');
-        } else if (isCurrentMember === 'no') {
-          this.rl.question('Enter the year they left: ', (leaveYear) => {
-            band.removeMember(musician, parseInt(leaveYear, 10));
-            musician.leaveBand(bandName, parseInt(leaveYear, 10));
-            this.saveDataToJson();
-            console.log('Musician removed from the band.');
-            menu();
-          });
-          return;
+  createBand() {
+    const askName = () => {
+      this.rl.question('Band Name: ', (name) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
+          console.log('Invalid name. Name should only contain letters, numbers, and spaces.');
+          askName();
         } else {
-          console.log('Invalid response. Please enter "yes" or "no.');
-          menu();
+          const askInfo = () => {
+            this.rl.question('Info: ', (infoText) => {
+              if (!/.+/.test(infoText)) {
+                console.log('Invalid info text. Info should not be empty.');
+                askInfo();
+              } else {
+                const askFormationYear = () => {
+                  this.rl.question('Formation Year: ', (formationYear) => {
+                    if (!/^\d{4}$/.test(formationYear)) {
+                      console.log('Invalid formation year format. Please enter a 4-digit year.');
+                      askFormationYear();
+                    } else {
+                      const currentYear = new Date().getFullYear();
+                      if (formationYear < 1900 || formationYear > currentYear) {
+                        console.log('Invalid formation year. Please enter a valid year between 1900 and the current year.');
+                        askFormationYear();
+                      } else {
+                        const askDisbandYear = () => {
+                          this.rl.question('Disband Year (leave it empty if still active): ', (disbandYear) => {
+                            if (disbandYear.trim() === '') {
+                              disbandYear = null;
+                            } else {
+                              disbandYear = parseInt(disbandYear, 10);
+                            }
+                            const band = new Band(name, infoText, parseInt(formationYear, 10), disbandYear);
+                            this.bands.push(band);
+                            this.saveDataToJson();
+                            console.log('Band created successfully.');
+                            this.menu();
+                          });
+                        };
+                        askDisbandYear();
+                      }
+                    }
+                  });
+                };
+                askFormationYear();
+              }
+            });
+          };
+          askInfo();
         }
-      } else {
-        console.log('Musician or band not found.');
-        menu();
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
-    }
+      });
+    };
+    askName();
   }
 
+  deleteBand() {
+    const deleteBandName = () => {
+      this.rl.question('Enter the Name of the Band to Delete: ', (name) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(name)) {
+          console.log('Invalid band name. Name should only contain letters, numbers, and spaces.');
+          deleteBandName();
+          return;
+        }
 
-  removeMusicianFromBand(musicianName, bandName, leaveYear) {
-    const musician = this.musicians.find((m) => musicianName.toLowerCase() === m.name.toLowerCase());
-    const band = this.bands.find((b) => bandName.toLowerCase() === b.name.toLowerCase());
+        const bandToDelete = this.bands.find((band) => band.name === name);
 
-    if (musician && band) {
-      if (leaveYear) {
-        band.previousMembers.push({ member: musician, leaveYear });
-      }
-      band.currentMembers = band.currentMembers.filter(
-        (member) => member.member.name.toLowerCase() !== musicianName.toLowerCase()
-      );
-      musician.bands = musician.bands.filter((b) => b.name.toLowerCase() !== bandName.toLowerCase());
+        if (bandToDelete) {
+          this.bands = this.bands.filter((band) => band.name !== name);
+          this.saveDataToJson();
+          console.log('Band deleted successfully.');
+        } else {
+          console.log('Band not found.');
+        }
 
-      this.saveDataToJson();
-      console.log('Musician removed from the band successfully.');
-    } else {
-      console.log('Musician or band not found.');
-    }
+        this.menu();
+      });
+    };
+    deleteBandName();
   }
 
+  addMusicianToBand() {
+    this.rl.question("Musician Name: ", (musicianName) => {
+      if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
+        console.log('Invalid musician name. Name should only contain letters, numbers, and spaces.');
+        this.menu();
+        return;
+      }
+
+      this.rl.question("Band Name to add to: ", (bandName) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(bandName)) {
+          console.log('Invalid band name. Name should only contain letters, numbers, and spaces.');
+          this.menu();
+          return;
+        }
+
+        const musician = this.musicians.find((m) => m.name === musicianName);
+        const band = this.bands.find((b) => b.name === bandName);
+
+        if (!musician) {
+          console.log('Musician not found.');
+          this.menu();
+        } else if (!band) {
+          console.log('Band not found.');
+          this.menu();
+        } else {
+          this.rl.question('Enter the year they left (leave it empty if still active): ', (leaveYear) => {
+            if (leaveYear.trim() === '') {
+              leaveYear = null;
+            } else if (!/^\d{4}$/.test(leaveYear)) {
+              console.log('Invalid leave year. Please enter a 4-digit year.');
+              this.menu();
+              return;
+            }
+
+            if (leaveYear === null) {
+              // Eğer ayrılma yılı girilmediyse, bu bir "current member"dir.
+              band.currentMembers.push({ member: musician });
+            } else {
+              // Ayrılma yılı girildiyse, bu bir "previous member"dir.
+              band.previousMembers.push({ member: musician, leaveYear });
+            }
+
+            this.saveDataToJson();
+            console.log('Musician added to the band successfully.');
+            this.menu();
+          });
+        }
+      });
+    });
+  }
+
+  removeMusicianFromBand() {
+    this.rl.question("Musician's Name: ", (musicianName) => {
+      if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
+        console.log('Invalid musician name. Name should only contain letters, numbers, and spaces.');
+        this.menu();
+        return;
+      }
+
+      this.rl.question('Name of the Band to Remove from: ', (bandName) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(bandName)) {
+          console.log('Invalid band name. Name should only contain letters, numbers, and spaces.');
+          this.menu();
+          return;
+        }
+
+        const musician = this.musicians.find((m) => m.name === musicianName);
+        const band = this.bands.find((b) => b.name === bandName);
+
+        if (!musician) {
+          console.log('Musician not found.');
+          this.menu();
+        } else if (!band) {
+          console.log('Band not found.');
+          this.menu();
+        } else {
+          // Müzisyeni belirtilen bandtan kaldır.
+          const index = band.currentMembers.findIndex((memberInfo) => memberInfo.member === musician);
+          if (index !== -1) {
+            band.currentMembers.splice(index, 1);
+            this.saveDataToJson(); // Değişiklikleri JSON dosyasına kaydet
+            console.log('Musician removed from the band successfully.');
+          } else {
+            console.log('Musician is not a member of the band.');
+          }
+          this.menu();
+        }
+      });
+    });
+  }
+
+  addBandToMusician() {
+    this.rl.question("Band Name: ", (bandName) => {
+      if (!/^[a-zA-Z0-9\s]+$/.test(bandName)) {
+        console.log('Invalid band name. Name should only contain letters, numbers, and spaces.');
+        this.addBandToMusician(); // Yanlış veri girilirse aynı soruya geri dön
+        return;
+      }
+
+      this.rl.question("Musician Name: ", (musicianName) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
+          console.log('Invalid musician name. Name should only contain letters, numbers, and spaces.');
+          this.addBandToMusician(); // Yanlış veri girilirse aynı soruya geri dön
+          return;
+        }
+
+        // Müzisyeni bulun
+        const musician = this.musicians.find((m) => m.name === musicianName);
+
+        if (!musician) {
+          console.log('Musician not found.');
+          this.menu();
+          return;
+        }
+
+        // Grubu bulun
+        const band = this.bands.find((b) => b.name === bandName);
+
+        if (!band) {
+          console.log('Band not found.');
+          this.menu();
+          return;
+        }
+
+        // Müzisyeni gruba ekleyin
+        band.addMember(musician, []);
+        this.saveDataToJson();
+        console.log('Band added to the musician successfully.');
+        this.menu();
+      });
+    });
+  }
   showData(type) {
     if (type === 'musician') {
       if (this.musicians.length === 0) {
@@ -158,11 +375,30 @@ class Program {
 
   saveDataToJson() {
     const jsonData = {
-      musicians: this.musicians.map((musician) => musician.toJSON()),
+      musicians: this.musicians.map((musician) => {
+        return {
+          name: musician.name,
+          infoText: musician.infoText,
+          birthYear: musician.birthYear,
+          instruments: musician.instruments,
+          bands: musician.bands.map((b) => ({
+            name: b.band.name,
+            joinYear: b.joinYear,
+            instruments: b.instruments,
+          })),
+        };
+      }),
       bands: this.bands.map((band) => band.toJSON()),
     };
+
     const jsonDataString = JSON.stringify(jsonData, null, 2);
-    fs.writeFileSync('data.json', jsonDataString);
+
+    try {
+      fs.writeFileSync('data.json', jsonDataString);
+      console.log('Data saved to data.json');
+    } catch (error) {
+      console.error('An error occurred while saving data:', error);
+    }
   }
 
   toJSON() {
@@ -210,11 +446,6 @@ class Program {
       console.log('Data file not found or cannot be read.');
     }
   }
-
 }
 
 module.exports = Program;
-
-
-
-
