@@ -85,6 +85,7 @@ class Program {
 
     askName();
   }
+
   deleteMusician() {
     const askForName = () => {
       this.rl.question("Enter the Name of the Musician to Delete: ", (name) => {
@@ -199,6 +200,7 @@ class Program {
     };
     deleteBandName();
   }
+
   getMusicianInstruments(musician) {
     return musician.instruments;
   }
@@ -290,6 +292,7 @@ class Program {
       });
     });
   }
+
   removeMusicianFromBand() {
     this.rl.question("Musician's Name: ", (musicianName) => {
       if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
@@ -311,31 +314,33 @@ class Program {
         if (!musician) {
           console.log('Musician not found.');
           this.menu();
-        } else if (!band) {
+          return;
+        }
+
+        if (!band) {
           console.log('Band not found.');
           this.menu();
-        } else {
-          // Check if the musician is a current member of the band
-          const currentIndex = band.currentMembers.findIndex((memberInfo) => memberInfo.member === musician);
-
-          if (currentIndex !== -1) {
-            band.currentMembers.splice(currentIndex, 1);
-            this.saveDataToJson();
-            console.log('Musician removed from the band successfully.');
-          } else {
-            // Check if the musician is a previous member of the band
-            const previousIndex = band.previousMembers.findIndex((memberInfo) => memberInfo.member === musician);
-
-            if (previousIndex !== -1) {
-              band.previousMembers.splice(previousIndex, 1);
-              this.saveDataToJson();
-              console.log('Musician removed from the previous members list of the band successfully.');
-            } else {
-              console.log('Musician is not a member of the band.');
-            }
-          }
-          this.menu();
+          return;
         }
+
+        const currentIndex = band.currentMembers.findIndex((memberInfo) => memberInfo.member === musician);
+
+        if (currentIndex !== -1) {
+          band.currentMembers.splice(currentIndex, 1);
+          this.saveDataToJson();
+          console.log('Musician removed from the band successfully.');
+        } else {
+          const previousIndex = band.previousMembers.findIndex((memberInfo) => memberInfo.member === musician);
+
+          if (previousIndex !== -1) {
+            band.previousMembers.splice(previousIndex, 1);
+            this.saveDataToJson();
+            console.log('Musician removed from the previous members list of the band successfully.');
+          } else {
+            console.log('Musician is not a member of the band.');
+          }
+        }
+        this.menu();
       });
     });
   }
@@ -365,7 +370,6 @@ class Program {
           console.log('Band not found.');
           this.menu();
         } else {
-          // Add the band to the musician
           if (!musician.bands.find((b) => b.band === band)) {
             musician.bands.push({ band });
             this.saveDataToJson();
@@ -378,6 +382,7 @@ class Program {
       });
     });
   }
+
   removeBandFromMusician() {
     this.rl.question("Musician Name: ", (musicianName) => {
       if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
@@ -403,7 +408,6 @@ class Program {
           console.log('Band not found.');
           this.menu();
         } else {
-          // Remove the band from the musician
           const index = musician.bands.findIndex((b) => b.band === band);
 
           if (index !== -1) {
@@ -450,6 +454,9 @@ class Program {
           musician.bands.forEach((bandInfo) => {
             if (bandInfo.name) {
               console.log(`  - Band: ${bandInfo.name}`);
+              if (bandInfo.instruments && bandInfo.instruments.length > 0) {
+                console.log(`    Instruments Played in the Band: ${bandInfo.instruments.join(', ')}`);
+              }
             }
           });
         } else {
@@ -460,6 +467,9 @@ class Program {
           musician.previousBands.forEach((bandInfo) => {
             if (bandInfo.name) {
               console.log(`  - Band: ${bandInfo.name}`);
+              if (bandInfo.instruments && bandInfo.instruments.length > 0) {
+                console.log(`    Instruments Played in the Band: ${bandInfo.instruments.join(', ')}`);
+              }
             }
           });
         } else {
@@ -516,7 +526,6 @@ class Program {
       console.log('No bands found.');
     }
   }
-
 
   saveDataToJson() {
     const jsonData = {
