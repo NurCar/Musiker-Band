@@ -24,8 +24,10 @@ class Program {
     console.log('4. Delete a Band');
     console.log('5. Add a Musician to a Band');
     console.log('6. Remove a Musician from a Band');
-    console.log('7. View Data');
-    console.log('8. Exit');
+    console.log('7. Add a Band to a Musician');
+    console.log('8. Remove a Band from a Musician');
+    console.log('9. View Data');
+    console.log('10. Exit');
   };
 
   createMusician() {
@@ -270,12 +272,101 @@ class Program {
           console.log('Band not found.');
           this.menu();
         } else {
-          // Müzisyeni belirtilen bandtan kaldır.
-          const index = band.currentMembers.findIndex((memberInfo) => memberInfo.member === musician);
-          if (index !== -1) {
-            band.currentMembers.splice(index, 1);
-            this.saveDataToJson(); // Değişiklikleri JSON dosyasına kaydet
+          // Check if the musician is a current member of the band
+          const currentIndex = band.currentMembers.findIndex((memberInfo) => memberInfo.member === musician);
+
+          if (currentIndex !== -1) {
+            band.currentMembers.splice(currentIndex, 1);
+            this.saveDataToJson();
             console.log('Musician removed from the band successfully.');
+          } else {
+            // Check if the musician is a previous member of the band
+            const previousIndex = band.previousMembers.findIndex((memberInfo) => memberInfo.member === musician);
+
+            if (previousIndex !== -1) {
+              band.previousMembers.splice(previousIndex, 1);
+              this.saveDataToJson();
+              console.log('Musician removed from the previous members list of the band successfully.');
+            } else {
+              console.log('Musician is not a member of the band.');
+            }
+          }
+          this.menu();
+        }
+      });
+    });
+  }
+
+  addBandToMusician() {
+    this.rl.question("Musician Name: ", (musicianName) => {
+      if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
+        console.log('Invalid musician name. Name should only contain letters, numbers, and spaces.');
+        this.menu();
+        return;
+      }
+
+      this.rl.question("Band Name to add: ", (bandName) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(bandName)) {
+          console.log('Invalid band name. Name should only contain letters, numbers, and spaces.');
+          this.menu();
+          return;
+        }
+
+        const musician = this.musicians.find((m) => m.name === musicianName);
+        const band = this.bands.find((b) => b.name === bandName);
+
+        if (!musician) {
+          console.log('Musician not found.');
+          this.menu();
+        } else if (!band) {
+          console.log('Band not found.');
+          this.menu();
+        } else {
+          // Add the band to the musician
+          if (!musician.bands.find((b) => b.band === band)) {
+            musician.bands.push({ band });
+            this.saveDataToJson();
+            console.log('Band added to the musician successfully.');
+          } else {
+            console.log('Musician is already a member of the band.');
+          }
+          this.menu();
+        }
+      });
+    });
+  }
+  removeBandFromMusician() {
+    this.rl.question("Musician Name: ", (musicianName) => {
+      if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
+        console.log('Invalid musician name. Name should only contain letters, numbers, and spaces.');
+        this.menu();
+        return;
+      }
+
+      this.rl.question("Band Name to remove: ", (bandName) => {
+        if (!/^[a-zA-Z0-9\s]+$/.test(bandName)) {
+          console.log('Invalid band name. Name should only contain letters, numbers, and spaces.');
+          this.menu();
+          return;
+        }
+
+        const musician = this.musicians.find((m) => m.name === musicianName);
+        const band = this.bands.find((b) => b.name === bandName);
+
+        if (!musician) {
+          console.log('Musician not found.');
+          this.menu();
+        } else if (!band) {
+          console.log('Band not found.');
+          this.menu();
+        } else {
+          // Remove the band from the musician
+          const index = musician.bands.findIndex((b) => b.band === band);
+
+          if (index !== -1) {
+            musician.bands.splice(index, 1);
+            this.saveDataToJson();
+            console.log('Band removed from the musician successfully.');
           } else {
             console.log('Musician is not a member of the band.');
           }
@@ -285,47 +376,6 @@ class Program {
     });
   }
 
-  addBandToMusician() {
-    this.rl.question("Band Name: ", (bandName) => {
-      if (!/^[a-zA-Z0-9\s]+$/.test(bandName)) {
-        console.log('Invalid band name. Name should only contain letters, numbers, and spaces.');
-        this.addBandToMusician(); // Yanlış veri girilirse aynı soruya geri dön
-        return;
-      }
-
-      this.rl.question("Musician Name: ", (musicianName) => {
-        if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
-          console.log('Invalid musician name. Name should only contain letters, numbers, and spaces.');
-          this.addBandToMusician(); // Yanlış veri girilirse aynı soruya geri dön
-          return;
-        }
-
-        // Müzisyeni bulun
-        const musician = this.musicians.find((m) => m.name === musicianName);
-
-        if (!musician) {
-          console.log('Musician not found.');
-          this.menu();
-          return;
-        }
-
-        // Grubu bulun
-        const band = this.bands.find((b) => b.name === bandName);
-
-        if (!band) {
-          console.log('Band not found.');
-          this.menu();
-          return;
-        }
-
-        // Müzisyeni gruba ekleyin
-        band.addMember(musician, []);
-        this.saveDataToJson();
-        console.log('Band added to the musician successfully.');
-        this.menu();
-      });
-    });
-  }
   showData(type) {
     if (type === 'musician') {
       if (this.musicians.length === 0) {
@@ -382,7 +432,7 @@ class Program {
           birthYear: musician.birthYear,
           instruments: musician.instruments,
           bands: musician.bands.map((b) => ({
-            name: b.band.name,
+            name: (b.band ? b.band.name : null), // Check if 'b.band' exists before accessing its properties
             joinYear: b.joinYear,
             instruments: b.instruments,
           })),

@@ -39,6 +39,8 @@ rl.on('line', (input) => {
       program.addBandToMusician();
       break;
     case '8':
+      program.removeBandFromMusician()
+    case '9':
       rl.question('View data for Musicians (M) or Bands (B): ', (dataType) => {
         dataType = dataType.trim().toLowerCase();
         if (dataType === 'm') {
@@ -51,7 +53,7 @@ rl.on('line', (input) => {
         program.menu();
       });
       break;
-    case '8':
+    case '10':
       program.saveDataToJson();
       rl.close();
       break;
