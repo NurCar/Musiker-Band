@@ -2,14 +2,13 @@ const fs = require('fs');
 const Band = require('./band');
 
 class Musician {
-  constructor(name, infoText, birthYear) {
+  constructor(name, infoText, birthYear, instruments = [], bands = []) {
     this.name = name;
     this.infoText = infoText;
     this.birthYear = birthYear;
-    this.instruments = [];
-    this.bands = [];
+    this.instruments = instruments;
+    this.bands = bands;
     this.previousBands = [];
-
   }
 
   joinBand(bandName, joinYear, instruments) {

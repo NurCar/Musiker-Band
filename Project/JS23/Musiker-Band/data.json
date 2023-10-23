@@ -1,0 +1,35 @@
+{
+  "musicians": [
+    {
+      "name": "nur",
+      "infoText": "khd",
+      "birthYear": 1999,
+      "instruments": [
+        "ok"
+      ],
+      "bands": []
+    }
+  ],
+  "bands": [
+    {
+      "name": "sa",
+      "infoText": "kahds",
+      "formationYear": 1999,
+      "disbandYear": null,
+      "currentMembers": [
+        {
+          "member": {
+            "name": "nur",
+            "infoText": "khd",
+            "birthYear": 1999,
+            "instruments": [
+              "ok"
+            ],
+            "bands": []
+          }
+        }
+      ],
+      "previousMembers": []
+    }
+  ]
+}

@@ -85,7 +85,6 @@ class Program {
 
     askName();
   }
-
   deleteMusician() {
     const askForName = () => {
       this.rl.question("Enter the Name of the Musician to Delete: ", (name) => {
@@ -376,52 +375,101 @@ class Program {
     });
   }
 
-  showData(type) {
-    if (type === 'musician') {
-      if (this.musicians.length === 0) {
-        console.log('No musicians found.');
+  viewData() {
+    this.rl.question('View data for Musicians (M) or Bands (B): ', (dataType) => {
+      if (dataType.toLowerCase() === 'm') {
+        this.viewMusicians();
+      } else if (dataType.toLowerCase() === 'b') {
+        this.viewBands();
       } else {
-        console.log('** Musicians **');
-        this.musicians.forEach((musician) => {
-          console.log(`Name: ${musician.name}`);
-          console.log(`Info: ${musician.infoText}`);
-          console.log(`Birth Year: ${musician.birthYear}`);
-          console.log(`Instruments Played: ${musician.instruments.join(', ')}`);
-          console.log('------------------------------------');
-        });
+        console.log('Invalid option. Please try again.');
       }
-    } else if (type === 'band') {
-      if (this.bands.length === 0) {
-        console.log('No bands found.');
-      } else {
-        console.log('** Bands **');
-        this.bands.forEach((band) => {
-          console.log(`Band Name: ${band.name}`);
-          console.log(`Info: ${band.infoText}`);
-          console.log(`Formation Year: ${band.formationYear}`);
-          console.log(`Disband Year: ${band.disbandYear || 'Ongoing'}`);
-          console.log('Members:');
+    });
+  }
 
-          if (band.currentMembers.length === 0 && band.previousMembers.length === 0) {
-            console.log('  - No current members.');
-          } else {
-            console.log('  - Members:');
-            band.currentMembers.forEach((memberInfo) => {
-              console.log(`    - ${memberInfo.member.name}`);
-            });
-
-            if (band.previousMembers.length > 0) {
-              console.log('  - Previous Members:');
-              band.previousMembers.forEach((previousMember) => {
-                console.log(`    - ${previousMember.member.name} (Left: ${previousMember.leaveYear})`);
-              });
+  viewMusicians() {
+    console.log('** All Musicians **');
+    if (this.musicians && this.musicians.length > 0) {
+      this.musicians.forEach((musician) => {
+        console.log(`Name: ${musician.name}`);
+        console.log(`Info: ${musician.infoText}`);
+        console.log(`Birth Year: ${musician.birthYear}`);
+        console.log(`Instruments Played: ${musician.instruments.join(', ')}`);
+        console.log('Bands:');
+        if (musician.bands && musician.bands.length > 0) {
+          musician.bands.forEach((bandInfo) => {
+            if (bandInfo.band && bandInfo.band.name) {
+              console.log(`  - Band: ${bandInfo.band.name}`);
+              console.log(`    Joined Year: ${bandInfo.joinYear}`);
+              console.log(`    Instruments Played: ${bandInfo.instruments.join(', ')}`);
             }
-          }
-          console.log('------------------------------------');
-        });
-      }
+          });
+        } else {
+          console.log('  No current bands.');
+        }
+        console.log('Previous Bands:');
+        if (musician.previousBands && musician.previousBands.length > 0) {
+          musician.previousBands.forEach((bandInfo) => {
+            if (bandInfo.band && bandInfo.band.name) {
+              console.log(`  - Band: ${bandInfo.band.name}`);
+              console.log(`    Left Year: ${bandInfo.leaveYear}`);
+            }
+          });
+        } else {
+          console.log('  No previous bands.');
+        }
+        console.log('------------------------------------');
+      });
+    } else {
+      console.log('No musicians found.');
     }
   }
+  viewBands() {
+    console.log('** All Bands **');
+    if (this.bands && this.bands.length > 0) {
+      this.bands.forEach((band) => {
+        console.log(`Name: ${band.name}`);
+        console.log(`Info: ${band.infoText}`);
+        console.log(`Formation Year: ${band.formationYear}`);
+        if (band.disbandYear !== null) {
+          console.log(`Disband Year: ${band.disbandYear}`);
+        } else {
+          console.log('Status: Still active');
+        }
+        console.log('Current Members:');
+        if (band.currentMembers && band.currentMembers.length > 0) {
+          band.currentMembers.forEach((memberInfo) => {
+            if (memberInfo.member) {
+              console.log(`  - Musician: ${memberInfo.member.name}`);
+              console.log(`    Joined Year: ${memberInfo.joinYear}`);
+              if (memberInfo.instruments) {
+                console.log(`    Instruments Played: ${memberInfo.instruments.join(', ')}`);
+              } else {
+                console.log('    No instruments information available.');
+              }
+            }
+          });
+        } else {
+          console.log('  No current members.');
+        }
+        console.log('Previous Members:');
+        if (band.previousMembers && band.previousMembers.length > 0) {
+          band.previousMembers.forEach((memberInfo) => {
+            if (memberInfo.member) {
+              console.log(`  - Musician: ${memberInfo.member.name}`);
+              console.log(`    Left Year: ${memberInfo.leaveYear}`);
+            }
+          });
+        } else {
+          console.log('  No previous members.');
+        }
+        console.log('------------------------------------');
+      });
+    } else {
+      console.log('No bands found.');
+    }
+  }
+
 
   saveDataToJson() {
     const jsonData = {

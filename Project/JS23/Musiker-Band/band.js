@@ -2,7 +2,7 @@ const fs = require('fs');
 const Musician = require('./musician');
 
 class Band {
-  constructor(name, infoText, formationYear, disbandYear) {
+  constructor(name, infoText, formationYear, disbandYear = null) {
     this.name = name;
     this.infoText = infoText;
     this.formationYear = formationYear;

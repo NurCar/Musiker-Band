@@ -1,7 +1,6 @@
 const fs = require('fs');
 const Program = require('./program');
-const Musician = require('./musician');
-const Band = require('./band');
+
 
 const readline = require('readline');
 const rl = readline.createInterface({
@@ -40,18 +39,9 @@ rl.on('line', (input) => {
       break;
     case '8':
       program.removeBandFromMusician()
+      break;
     case '9':
-      rl.question('View data for Musicians (M) or Bands (B): ', (dataType) => {
-        dataType = dataType.trim().toLowerCase();
-        if (dataType === 'm') {
-          program.showData('musician');
-        } else if (dataType === 'b') {
-          program.showData('band');
-        } else {
-          console.log('Invalid option. Please enter "M" or "B".');
-        }
-        program.menu();
-      });
+      program.viewData();
       break;
     case '10':
       program.saveDataToJson();
