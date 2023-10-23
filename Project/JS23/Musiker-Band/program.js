@@ -110,6 +110,7 @@ class Program {
       });
       this.saveDataToJson();
       console.log("Musician deleted successfully.");
+      this.menu();
     } else {
       console.log("Musician not found.");
       this.menu();
@@ -146,6 +147,11 @@ class Program {
                               disbandYear = null;
                             } else {
                               disbandYear = parseInt(disbandYear, 10);
+                              if (disbandYear < formationYear) {
+                                console.log('Disband year must be greater than or equal to formation year.');
+                                askDisbandYear();
+                                return;
+                              }
                             }
                             const band = new Band(name, infoText, parseInt(formationYear, 10), disbandYear);
                             this.bands.push(band);
@@ -169,7 +175,6 @@ class Program {
     };
     askName();
   }
-
   deleteBand() {
     const deleteBandName = () => {
       this.rl.question('Enter the Name of the Band to Delete: ', (name) => {
@@ -230,13 +235,42 @@ class Program {
               return;
             }
 
+            const currentYear = new Date().getFullYear();
+            if (joinYear < 1900 || joinYear > currentYear) {
+              console.log('Invalid join year. Please enter a valid year between 1900 and the current year.');
+              this.menu();
+              return;
+            }
+
+            if (joinYear < band.formationYear) {
+              console.log('Invalid join year. Musician cannot join the band before its formation year.');
+              this.menu();
+              return;
+            }
+
+            if (band.disbandYear && joinYear > band.disbandYear) {
+              console.log('Invalid join year. Musician cannot join the band after it disbanded.');
+              this.menu();
+              return;
+            }
+
             this.rl.question('Enter the year they left (leave it empty if still active): ', (leaveYear) => {
-              if (leaveYear.trim() === '') {
-                leaveYear = null;
-              } else if (!/^\d{4}$/.test(leaveYear)) {
-                console.log('Invalid leave year. Please enter a 4-digit year.');
-                this.menu();
-                return;
+              if (band.disbandYear || leaveYear.trim() !== '') {
+                if (!/^\d{4}$/.test(leaveYear)) {
+                  console.log('Invalid leave year. Please enter a 4-digit year.');
+                  this.menu();
+                  return;
+                }
+
+                if (leaveYear <= joinYear) {
+                  console.log('Invalid leave year. Musician must leave the band after joining.');
+                  this.menu();
+                  return;
+                }
+
+                band.previousMembers.push({ member: musician, joinYear, leaveYear });
+              } else {
+                band.currentMembers.push({ member: musician, joinYear });
               }
 
               this.rl.question('Enter the instrument they play: ', (instruments) => {
@@ -244,14 +278,6 @@ class Program {
                   instruments = null;
                 } else {
                   instruments = instruments.split(',').map((instrument) => instrument.trim());
-                }
-
-                if (leaveYear === null) {
-                  // Eğer ayrılma yılı girilmediyse, bu bir "current member"dir.
-                  band.currentMembers.push({ member: musician, joinYear, instruments });
-                } else {
-                  // Katılma ve ayrılma yılı girildiyse, bu bir "previous member"dir.
-                  band.previousMembers.push({ member: musician, joinYear, leaveYear, instruments });
                 }
 
                 this.saveDataToJson();
@@ -501,7 +527,7 @@ class Program {
           birthYear: musician.birthYear,
           instruments: musician.instruments,
           bands: musician.bands.map((b) => ({
-            name: (b.band ? b.band.name : null), // Check if 'b.band' exists before accessing its properties
+            name: (b.band ? b.band.name : null),
             joinYear: b.joinYear,
             instruments: b.instruments,
           })),

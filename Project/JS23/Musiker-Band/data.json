@@ -1,86 +1,66 @@
 {
   "musicians": [
     {
-      "name": "se",
-      "infoText": "klashf",
+      "name": "nur",
+      "infoText": "sad",
       "birthYear": 1999,
       "instruments": [
         "ik"
       ],
-      "bands": [
-        {
-          "name": null
-        },
-        {
-          "name": null
-        }
-      ]
+      "bands": []
     },
     {
-      "name": "sap",
-      "infoText": "jhds",
-      "birthYear": 2000,
+      "name": "su",
+      "infoText": "khsadf",
+      "birthYear": 1999,
       "instruments": [
-        "lo"
+        "iu"
       ],
       "bands": []
     }
   ],
   "bands": [
     {
-      "name": "sel",
-      "infoText": "khf",
+      "name": "sa",
+      "infoText": "khsd",
       "formationYear": 1999,
       "disbandYear": null,
       "currentMembers": [
         {
           "member": {
-            "name": "se",
-            "infoText": "klashf",
+            "name": "nur",
+            "infoText": "sad",
             "birthYear": 1999,
             "instruments": [
               "ik"
             ],
-            "bands": [
-              {
-                "name": "sel",
-                "leaveYear": []
-              },
-              {
-                "name": "de",
-                "leaveYear": []
-              }
-            ]
-          },
-          "instruments": [
-            "bo"
-          ]
+            "bands": []
+          }
         }
       ],
       "previousMembers": []
     },
     {
-      "name": "de",
-      "infoText": "khvn",
+      "name": "se",
+      "infoText": "kshd",
       "formationYear": 2000,
-      "disbandYear": null,
-      "currentMembers": [
+      "disbandYear": 2002,
+      "currentMembers": [],
+      "previousMembers": [
         {
           "member": {
-            "name": "sap",
-            "infoText": "jhds",
-            "birthYear": 2000,
+            "name": "nur",
+            "infoText": "sad",
+            "birthYear": 1999,
             "instruments": [
-              "lo"
+              "ik"
             ],
             "bands": []
           },
-          "instruments": [
-            "oi"
-          ]
+          "joinYear": "2001",
+          "leaveYear": "2002"
         }
-      ],
-      "previousMembers": []
+      ]
     }
   ]
 }
