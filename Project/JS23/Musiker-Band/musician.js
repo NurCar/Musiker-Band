@@ -15,8 +15,9 @@ class Musician {
     const band = this.bands.find((b) => b.name === bandName);
     if (band) {
       const joinYearInt = parseInt(joinYear, 10);
-      this.bands.push({ band, joinYear: joinYearInt, instruments: instruments });
-      band.addMember(this, joinYearInt, instruments);
+      const musicianInstruments = this.getMusicianInstruments(this);
+      this.bands.push({ band, joinYear: joinYearInt, instruments: musicianInstruments });
+      band.addMember(this, joinYearInt, musicianInstruments);
     } else {
       console.log('Band not found.');
     }
@@ -40,8 +41,12 @@ class Musician {
       birthYear: this.birthYear,
       instruments: this.instruments,
       bands: this.bands.map((b) => ({
-        name: b.name,
+        name: b.band.name,
         instruments: b.instruments,
+        joinYear: b.joinYear,
+        leaveYear: this.previousBands
+          .filter((pb) => pb.band.name === b.band.name)
+          .map((pb) => pb.leaveYear),
       })),
     };
   }

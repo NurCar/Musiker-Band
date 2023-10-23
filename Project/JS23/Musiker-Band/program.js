@@ -194,6 +194,9 @@ class Program {
     };
     deleteBandName();
   }
+  getMusicianInstruments(musician) {
+    return musician.instruments;
+  }
 
   addMusicianToBand() {
     this.rl.question("Musician Name: ", (musicianName) => {
@@ -220,32 +223,47 @@ class Program {
           console.log('Band not found.');
           this.menu();
         } else {
-          this.rl.question('Enter the year they left (leave it empty if still active): ', (leaveYear) => {
-            if (leaveYear.trim() === '') {
-              leaveYear = null;
-            } else if (!/^\d{4}$/.test(leaveYear)) {
-              console.log('Invalid leave year. Please enter a 4-digit year.');
+          this.rl.question('Enter the year they joined: ', (joinYear) => {
+            if (!/^\d{4}$/.test(joinYear)) {
+              console.log('Invalid join year. Please enter a 4-digit year.');
               this.menu();
               return;
             }
 
-            if (leaveYear === null) {
-              // Eğer ayrılma yılı girilmediyse, bu bir "current member"dir.
-              band.currentMembers.push({ member: musician });
-            } else {
-              // Ayrılma yılı girildiyse, bu bir "previous member"dir.
-              band.previousMembers.push({ member: musician, leaveYear });
-            }
+            this.rl.question('Enter the year they left (leave it empty if still active): ', (leaveYear) => {
+              if (leaveYear.trim() === '') {
+                leaveYear = null;
+              } else if (!/^\d{4}$/.test(leaveYear)) {
+                console.log('Invalid leave year. Please enter a 4-digit year.');
+                this.menu();
+                return;
+              }
 
-            this.saveDataToJson();
-            console.log('Musician added to the band successfully.');
-            this.menu();
+              this.rl.question('Enter the instrument they play: ', (instruments) => {
+                if (instruments.trim() === '') {
+                  instruments = null;
+                } else {
+                  instruments = instruments.split(',').map((instrument) => instrument.trim());
+                }
+
+                if (leaveYear === null) {
+                  // Eğer ayrılma yılı girilmediyse, bu bir "current member"dir.
+                  band.currentMembers.push({ member: musician, joinYear, instruments });
+                } else {
+                  // Katılma ve ayrılma yılı girildiyse, bu bir "previous member"dir.
+                  band.previousMembers.push({ member: musician, joinYear, leaveYear, instruments });
+                }
+
+                this.saveDataToJson();
+                console.log('Musician added to the band successfully.');
+                this.menu();
+              });
+            });
           });
         }
       });
     });
   }
-
   removeMusicianFromBand() {
     this.rl.question("Musician's Name: ", (musicianName) => {
       if (!/^[a-zA-Z0-9\s]+$/.test(musicianName)) {
@@ -387,6 +405,11 @@ class Program {
     });
   }
 
+  calculateAge(birthYear) {
+    const currentYear = new Date().getFullYear();
+    return currentYear - birthYear;
+  }
+
   viewMusicians() {
     console.log('** All Musicians **');
     if (this.musicians && this.musicians.length > 0) {
@@ -394,14 +417,13 @@ class Program {
         console.log(`Name: ${musician.name}`);
         console.log(`Info: ${musician.infoText}`);
         console.log(`Birth Year: ${musician.birthYear}`);
+        console.log(`Age: ${this.calculateAge(musician.birthYear)}`);
         console.log(`Instruments Played: ${musician.instruments.join(', ')}`);
         console.log('Bands:');
         if (musician.bands && musician.bands.length > 0) {
           musician.bands.forEach((bandInfo) => {
-            if (bandInfo.band && bandInfo.band.name) {
-              console.log(`  - Band: ${bandInfo.band.name}`);
-              console.log(`    Joined Year: ${bandInfo.joinYear}`);
-              console.log(`    Instruments Played: ${bandInfo.instruments.join(', ')}`);
+            if (bandInfo.name) {
+              console.log(`  - Band: ${bandInfo.name}`);
             }
           });
         } else {
@@ -410,9 +432,8 @@ class Program {
         console.log('Previous Bands:');
         if (musician.previousBands && musician.previousBands.length > 0) {
           musician.previousBands.forEach((bandInfo) => {
-            if (bandInfo.band && bandInfo.band.name) {
-              console.log(`  - Band: ${bandInfo.band.name}`);
-              console.log(`    Left Year: ${bandInfo.leaveYear}`);
+            if (bandInfo.name) {
+              console.log(`  - Band: ${bandInfo.name}`);
             }
           });
         } else {

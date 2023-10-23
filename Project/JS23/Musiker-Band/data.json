@@ -1,32 +1,83 @@
 {
   "musicians": [
     {
-      "name": "nur",
-      "infoText": "khd",
+      "name": "se",
+      "infoText": "klashf",
       "birthYear": 1999,
       "instruments": [
-        "ok"
+        "ik"
+      ],
+      "bands": [
+        {
+          "name": null
+        },
+        {
+          "name": null
+        }
+      ]
+    },
+    {
+      "name": "sap",
+      "infoText": "jhds",
+      "birthYear": 2000,
+      "instruments": [
+        "lo"
       ],
       "bands": []
     }
   ],
   "bands": [
     {
-      "name": "sa",
-      "infoText": "kahds",
+      "name": "sel",
+      "infoText": "khf",
       "formationYear": 1999,
       "disbandYear": null,
       "currentMembers": [
         {
           "member": {
-            "name": "nur",
-            "infoText": "khd",
+            "name": "se",
+            "infoText": "klashf",
             "birthYear": 1999,
             "instruments": [
-              "ok"
+              "ik"
+            ],
+            "bands": [
+              {
+                "name": "sel",
+                "leaveYear": []
+              },
+              {
+                "name": "de",
+                "leaveYear": []
+              }
+            ]
+          },
+          "instruments": [
+            "bo"
+          ]
+        }
+      ],
+      "previousMembers": []
+    },
+    {
+      "name": "de",
+      "infoText": "khvn",
+      "formationYear": 2000,
+      "disbandYear": null,
+      "currentMembers": [
+        {
+          "member": {
+            "name": "sap",
+            "infoText": "jhds",
+            "birthYear": 2000,
+            "instruments": [
+              "lo"
             ],
             "bands": []
-          }
+          },
+          "instruments": [
+            "oi"
+          ]
         }
       ],
       "previousMembers": []
